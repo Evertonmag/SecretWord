@@ -25,7 +25,7 @@ Um projeto feito para estudo de um minijogo para descobrir a palavra
     npm -v
   ```
 
-se tiver resultados parecido a este com a versão dos dois está instalado corretamente.
+se tiver resultados parecido a este. Com o numero de versão dos dois, está instalado e funcionando os comandos.
 
 ![Verificando se o node e npm está instalado corretamente](images/verificando_node_e_npm.png)
 
@@ -49,7 +49,7 @@ npm start
 
 ## Como Jogar
 
-1- Após a filalização da compilação do projeto no powersehell clique no link do linha do local
+1- Após a filalização da compilação do projeto no powershell clique no link do linha do local
 
 ![Abrir projeto localmente](images/AbrirProjeto.png)
 
