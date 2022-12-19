@@ -11,14 +11,14 @@ import { wordsList } from "./data/Words";
 import StartScreen from "./Components/StartScreen";
 import Game from "./Components/Game";
 import GameOver from "./Components/GameOver";
+import Win from "./Components/Win";
 
 const stages = [
   { id: 1, name: "Start" },
   { id: 2, name: "Game" },
   { id: 3, name: "End" },
+  { id: 4, name: "Win" },
 ];
-
-const guessesQty = 3;
 
 function App() {
   const [gameStage, setGameStage] = useState(stages[0].name);
@@ -30,10 +30,10 @@ function App() {
 
   const [guessedLetters, setGuessedLetters] = useState([]);
   const [wrongLetters, setWrongLetters] = useState([]);
-  const [guesses, setGuesses] = useState(guessesQty);
+  const [guesses, setGuesses] = useState(3);
   const [score, setScore] = useState(0);
 
-  const pickWordAndCategory = useCallback(() => {
+  const PickWordAndCategory = useCallback(() => {
     // Pick a random category
     const categories = Object.keys(words);
     const category =
@@ -52,7 +52,7 @@ function App() {
     clearLetterStates();
 
     // pick word and pick category
-    const { word, category } = pickWordAndCategory();
+    const { word, category } = PickWordAndCategory();
 
     // create and array of letters
     let wordLetters = word.split("");
@@ -65,7 +65,7 @@ function App() {
     setLetters(wordLetters);
 
     setGameStage(stages[1].name);
-  }, [pickWordAndCategory]);
+  }, [PickWordAndCategory]);
 
   //Process the letter input
   const VerifyLetter = (letter) => {
@@ -114,20 +114,29 @@ function App() {
   useEffect(() => {
     const uniqueLetters = [...new Set(letters)];
 
+    if (guessedLetters.length === 0 && uniqueLetters.length === 0) return;
     //win conditional
     if (guessedLetters.length === uniqueLetters.length) {
       //add score
-      setScore((actualGuesses) => (actualGuesses += 100));
+      setScore((actualScore) => actualScore + 100);
 
+      //add guesses
+      if (score % 1000 === 0 && score < 10000) {
+        setGuesses((valorAtual) => valorAtual + 1);
+      } else if (score === 10000) {
+        //Chamar tela de vitória
+        console.log("Passou aqui");
+        setGameStage(stages[3].name);
+      }
       //restart game with new word
       StartGame();
     }
-  }, [guessedLetters, letters, StartGame]);
+  }, [guessedLetters, score, letters, StartGame]);
 
   //Retry the game
   const Retry = () => {
     setScore(0);
-    setGuesses(guessesQty);
+    setGuesses(3);
 
     setGameStage(stages[0].name);
   };
@@ -148,6 +157,7 @@ function App() {
         />
       )}
       {gameStage === "End" && <GameOver retry={Retry} score={score} />}
+      {gameStage === "Win" && <Win retry={Retry} score={score} />}
     </div>
   );
 }
